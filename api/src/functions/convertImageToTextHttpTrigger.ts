@@ -1,9 +1,10 @@
 import { app, HttpRequest, HttpResponseInit, InvocationContext } from "@azure/functions";
 
 import {
-  ImageAnalysisClient,
-  ImageAnalysisResultOutput
+    ImageAnalysisClient,
+    ImageAnalysisResultOutput
 } from "@azure-rest/ai-vision-image-analysis";
+import { error } from "console";
 
 
 const { ImageAnalysisClient } = require('@azure-rest/ai-vision-image-analysis');
@@ -15,11 +16,11 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
     const key = process.env["VISION_KEY"];
     const endpoint = process.env["VISION_ENDPOINT"];
 
-    if(!key || !endpoint){
+    if (!key || !endpoint) {
         context.error("Missing environment variables");
         return {
             status: 500,
-            jsonBody:{
+            jsonBody: {
                 error: "Something went wrong. Contact administrator."
             }
         }
@@ -30,22 +31,22 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
 
     const imageBuffer = await request.arrayBuffer();
 
-    if(!imageBuffer){
+    if (!imageBuffer) {
         context.error("Missing Image");
         return {
             status: 500,
-            jsonBody:{
-                error:"Missing image."
+            jsonBody: {
+                error: "Missing image."
             }
         }
     }
 
-    
+
     const response = await client.path('/imageanalysis:analyze').post({
         body: new Uint8Array(imageBuffer),
         contentType: 'application/octet-stream',
-        queryParameters:{
-            features:['read']
+        queryParameters: {
+            features: ['read']
         },
     });
 
@@ -53,13 +54,25 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
 
     let output = '';
 
-    for(const block of result.readResult.blocks){
-        output += `${block.lines[0].text}\n`;
+    for (const block of result.readResult.blocks) {
+        for (const line of block.lines) {
+            output += `${line.text}\n`;
+        }
     }
 
     context.log(`Http function processed request for url "${request.url}"`);
-
-    return { status:200, body: output };
+    if (output) {
+        return { status: 200, body: output };
+    }
+    else {
+        context.error("No text found in image");
+        return {
+            status: 500,
+            jsonBody:{
+               error: 'No text found in image. Try a different image'
+            }
+        }
+    }
 };
 
 app.http('convertImageToTextHttpTrigger', {
