@@ -19,7 +19,7 @@ video{
 /* Mobile: show the full camera feed */
 .webcam-container {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
 }
 
@@ -34,8 +34,8 @@ video{
 @media (min-width: 768px) {
   .webcam-container {
     width: 100vw;
-    height: calc(100vw * 0.75); /* 4:3 ratio */
-    max-height: 100vh;
+    height: calc(100dvw * 0.75); /* 4:3 ratio */
+    max-height: 100dvh;
     margin: 0 auto;
     overflow: hidden;
   }
