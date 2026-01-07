@@ -4,8 +4,6 @@ video{
 
 .dock {
     position: fixed;
-    background-color: #282a30;
-    /* height: 100px; */
     width: 100vw;
     bottom: 0;
     display: flex;
@@ -14,6 +12,18 @@ video{
     align-items: flex-end;
     flex-wrap: nowrap;
     align-content: stretch;
+    padding-bottom: 50px;
+}
+
+.actions{
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: flex-end;
+  width: 100vw;
+  top: 50vh;
+  z-index: 1;
 }
 
 /* Mobile: show the full camera feed */
@@ -35,14 +45,6 @@ video{
 
 /* Desktop: use 4:3 ratio */
 @media (min-width: 768px) {
-  .webcam-container {
-    width: 100vw;
-    height: calc(100dvw * 0.75); /* 4:3 ratio */
-    max-height: 100dvh;
-    margin: 0 auto;
-    overflow: hidden;
-  }
-
   .webcam, .image {
     object-fit: contain; /* keep full feed visible */
   }

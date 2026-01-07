@@ -13,19 +13,25 @@ export function Camera() {
 
   return (
     <>
-    <div className={styles['webcam-container']}>
-      {!image ? (
-        <Webcam 
-            audio={false} 
-            ref={webcamRef} 
-            screenshotFormat="image/jpeg" 
+      <div className={styles["webcam-container"]}>
+        {!image ? (
+          <Webcam
+            audio={false}
+            ref={webcamRef}
+            screenshotFormat="image/jpeg"
             className={styles.webcam}
             disablePictureInPicture={true}
-            />
-      ) : (
-        <img className={styles.image} src={image}/>
-      )}
-    </div>
+          />
+        ) : (
+          <>
+            <div className={styles.actions}>
+              <button>Accept</button>
+              <button>Cancel</button>
+            </div>
+            <img className={styles.image} src={image} />
+          </>
+        )}
+      </div>
 
       <div className={styles.dock}>
         <button>files</button>
