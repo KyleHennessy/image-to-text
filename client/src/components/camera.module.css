@@ -24,10 +24,13 @@ video{
 }
 
 .webcam, .image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* show full camera feed */
-  background: black;   /* avoids white bars */
+  object-fit: cover; /* show full camera feed */
+  
 }
 
 /* Desktop: use 4:3 ratio */
