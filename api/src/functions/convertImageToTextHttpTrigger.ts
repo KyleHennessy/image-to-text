@@ -11,11 +11,15 @@ const { AzureKeyCredential } = require('@azure/core-auth');
 export async function convertImageToTextHttpTrigger(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     const key = process.env["VISION_KEY"];
     const endpoint = process.env["VISION_ENDPOINT"];
+    const headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
 
     if (!key || !endpoint) {
         context.error("Missing environment variables");
         return {
             status: 500,
+            headers: headers,
             jsonBody: {
                 error: "Something went wrong. Contact administrator."
             }
@@ -31,6 +35,7 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
         context.error("Missing Image");
         return {
             status: 400,
+            headers: headers,
             jsonBody: {
                 error: "Missing image."
             }
@@ -43,6 +48,7 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
         context.error('File is not an image');
         return{
             status:400,
+            headers: headers,
             jsonBody:{
                 error: 'File is not an image'
             }
@@ -69,12 +75,16 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
 
     context.log(`Http function processed request for url "${request.url}"`);
     if (output) {
-        return { status: 200, body: output };
+        return { 
+            status: 200,
+            headers: headers,
+            body: output };
     }
     else {
-        context.error("No text found in image");
+        context.error('No text found in image');
         return {
             status: 500,
+            headers: headers,
             jsonBody:{
                error: 'No text found in image. Try a different image'
             }
