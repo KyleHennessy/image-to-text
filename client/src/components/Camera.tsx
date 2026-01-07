@@ -70,7 +70,6 @@ export function Camera() {
   return (
     <>
       <div className={styles["webcam-container"]}>
-        <h1>{image}</h1>
         {!image ? (
           <Webcam
             audio={false}
@@ -109,7 +108,7 @@ export function Camera() {
           className={styles.dock}
           style={{ display: image !== "" ? "none" : "auto" }}
         >
-          <button>
+          <button className={styles.button}>
             <MdTextSnippet />
           </button>
           <button
@@ -118,7 +117,7 @@ export function Camera() {
           >
             <MdOutlineCameraAlt />
           </button>
-          <button onClick={() => handleUploadClick()}>
+          <button className={styles.button} onClick={() => handleUploadClick()}>
             <MdUpload />
           </button>
         </div>

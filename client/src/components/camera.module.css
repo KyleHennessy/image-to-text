@@ -15,6 +15,13 @@ video{
     padding-bottom: 50px;
 }
 
+.button{
+  width: 80px;
+  height: 80px;
+  font-size: 36pt;
+  padding: 0;
+}
+
 .rounded-button {
   width: 80px;
   height: 80px;
@@ -34,7 +41,8 @@ video{
   background-color: #58d332;
 }
 
-.rounded-button svg{
+.rounded-button svg,
+.button svg{
   margin-top:10px;
 }
 
