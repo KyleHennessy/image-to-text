@@ -33,7 +33,7 @@ export function Camera() {
 
     reader.readAsDataURL(file);
 
-    event.target.value = '';
+    event.target.value = "";
   };
 
   const handleUploadClick = () => {
@@ -87,12 +87,14 @@ export function Camera() {
               {!uploading && (
                 <>
                   <button
+                    type="button"
                     className={`${styles["check-button"]} ${styles["rounded-button"]}`}
                     onClick={() => analyzeImage()}
                   >
                     <IoMdCheckmark />
                   </button>
                   <button
+                    type="button"
                     className={`${styles["cancel-button"]} ${styles["rounded-button"]}`}
                     onClick={() => setImage("")}
                   >
@@ -110,16 +112,27 @@ export function Camera() {
           className={styles.dock}
           style={{ display: image !== "" ? "none" : "auto" }}
         >
-          <button className={styles.button}>
+          <button
+            type="button"
+            className={styles.button}
+            data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasExample"
+            aria-controls="offcanvasExample"
+          >
             <MdTextSnippet />
           </button>
           <button
+            type="button"
             className={`${styles["camera-button"]} ${styles["rounded-button"]}`}
             onClick={() => onCapture()}
           >
             <MdOutlineCameraAlt />
           </button>
-          <button className={styles.button} onClick={() => handleUploadClick()}>
+          <button
+            type="button"
+            className={styles.button}
+            onClick={() => handleUploadClick()}
+          >
             <MdUpload />
           </button>
         </div>
