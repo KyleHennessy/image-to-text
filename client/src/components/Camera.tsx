@@ -20,15 +20,16 @@ export function Camera() {
             ref={webcamRef} 
             screenshotFormat="image/jpeg" 
             className={styles.webcam}
+            disablePictureInPicture={true}
             />
       ) : (
-        <img src={image}/>
+        <img className={styles.image} src={image}/>
       )}
     </div>
 
       <div className={styles.dock}>
         <button>files</button>
-        <button onClick={() => onCapture()}>scan</button>
+        <button onClick={() => onCapture()}>capture</button>
         <button>upload</button>
       </div>
     </>

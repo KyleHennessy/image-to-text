@@ -23,7 +23,7 @@ video{
   overflow: hidden;
 }
 
-.webcam {
+.webcam, .image {
   width: 100%;
   height: 100%;
   object-fit: contain; /* show full camera feed */
@@ -40,7 +40,7 @@ video{
     overflow: hidden;
   }
 
-  .webcam {
+  .webcam, .image {
     object-fit: contain; /* keep full feed visible */
   }
 }
