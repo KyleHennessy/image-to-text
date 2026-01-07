@@ -126,6 +126,7 @@ export function Camera() {
 
       <input
         type="file"
+        accept="image/*"
         ref={fileInput}
         style={{ display: "none" }}
         onChange={(event) => handleFileSelect(event)}
