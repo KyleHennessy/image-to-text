@@ -32,6 +32,8 @@ export function Camera() {
     };
 
     reader.readAsDataURL(file);
+
+    event.target.value = '';
   };
 
   const handleUploadClick = () => {
