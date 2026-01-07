@@ -11,6 +11,30 @@ export function Camera() {
     setImage(imageSrc ?? "");
   }, [webcamRef, setImage]);
 
+  async function analyzeImage(){
+    const url = 'https://ai-sandbox-functions.azurewebsites.net/api/convertImageToTextHttpTrigger';
+
+    const blob = await(await fetch(image)).blob();
+    
+    const response = await fetch(url, {
+      method: 'POST',
+      headers:{
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/octet-stream'
+      },
+      body: blob
+    });
+
+    const json = await response.json();
+
+    if(!response.ok){
+      alert(json.error);
+      return;
+    }
+
+    alert(json.text);
+  }
+
   return (
     <>
       <div className={styles["webcam-container"]}>
@@ -25,8 +49,8 @@ export function Camera() {
         ) : (
           <>
             <div className={styles.actions}>
-              <button>Accept</button>
-              <button>Cancel</button>
+              <button onClick={() => analyzeImage()}>Accept</button>
+              <button onClick={() => setImage('')}>Cancel</button>
             </div>
             <img className={styles.image} src={image} />
           </>

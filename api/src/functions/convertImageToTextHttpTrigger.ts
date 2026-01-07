@@ -78,7 +78,9 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
         return { 
             status: 200,
             headers: headers,
-            body: output };
+            jsonBody: {
+                'text': output
+            } };
     }
     else {
         context.error('No text found in image');
