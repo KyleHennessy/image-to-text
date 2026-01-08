@@ -8,6 +8,7 @@ import { IoMdCheckmark } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { CgSpinner } from "react-icons/cg";
 import { useFiles, type TextFile } from "../context/FileCacheContext";
+import { toast } from "react-toastify";
 
 export function Camera() {
   const webcamRef = useRef<Webcam>(null);
@@ -64,7 +65,7 @@ export function Camera() {
     setImage("");
 
     if (!response.ok) {
-      alert(json.error);
+      toast.error(json.error);
       return;
     }
 
@@ -92,6 +93,8 @@ export function Camera() {
     }
 
     setFiles(updatedFiles);
+
+    toast.success("Image converted to text! Open the files screen to view")
   }
 
   return (
