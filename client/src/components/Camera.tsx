@@ -69,7 +69,16 @@ export function Camera() {
     }
 
     const newFile: TextFile = {
-      date: new Date().toISOString(),
+      date: new Date()
+        .toLocaleString("en-AU", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        })
+        .replace(",", ""),
       content: json.text,
     };
 
@@ -81,8 +90,6 @@ export function Camera() {
     while (updatedFiles.length > 5) {
       updatedFiles.shift();
     }
-
-    console.log(updatedFiles);
 
     setFiles(updatedFiles);
   }

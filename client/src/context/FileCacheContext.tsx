@@ -19,7 +19,6 @@ export function FilesProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
-    console.log('updating storage')
     localStorage.setItem("files", JSON.stringify(files));
   }, [files]);
 
