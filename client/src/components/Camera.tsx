@@ -7,10 +7,12 @@ import { MdUpload } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { CgSpinner } from "react-icons/cg";
+import { useFiles, type TextFile } from "../context/FileCacheContext";
 
 export function Camera() {
   const webcamRef = useRef<Webcam>(null);
   const fileInput = useRef<HTMLInputElement>(null);
+  const { files, setFiles } = useFiles();
 
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
@@ -66,7 +68,23 @@ export function Camera() {
       return;
     }
 
-    alert(json.text);
+    const newFile: TextFile = {
+      date: new Date().toISOString(),
+      content: json.text,
+    };
+
+    const updatedFiles = [...files];
+
+    updatedFiles.push(newFile);
+
+    //only show 5 most recent images converted to text. Remove the rest
+    while (updatedFiles.length > 5) {
+      updatedFiles.shift();
+    }
+
+    console.log(updatedFiles);
+
+    setFiles(updatedFiles);
   }
 
   return (
@@ -116,8 +134,8 @@ export function Camera() {
             type="button"
             className={styles.button}
             data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvasExample"
-            aria-controls="offcanvasExample"
+            data-bs-target="#files"
+            aria-controls="files"
           >
             <MdTextSnippet />
           </button>
