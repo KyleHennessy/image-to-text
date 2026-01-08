@@ -33,3 +33,11 @@
 .read-the-docs {
   color: #888;
 }
+
+.close-offcanvas{
+  cursor: pointer;
+  opacity: 1;
+  font-size: 25pt;
+  padding: 0;
+}
+
