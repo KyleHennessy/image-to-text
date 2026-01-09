@@ -7,6 +7,7 @@ import { MdUpload } from "react-icons/md";
 import { IoMdCheckmark } from "react-icons/io";
 import { IoMdClose } from "react-icons/io";
 import { CgSpinner } from "react-icons/cg";
+import { MdOutlineCameraswitch } from "react-icons/md";
 import { useFiles, type TextFile } from "../context/FileCacheContext";
 import { toast } from "react-toastify";
 
@@ -19,7 +20,9 @@ export function Camera() {
   const [uploading, setUploading] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
   const [isNewFile, setIsNewFile] = useState(false);
-  const [cameraPermission, setCameraPermission] = useState<PermissionState>("prompt");
+  const [cameraPermission, setCameraPermission] =
+    useState<PermissionState>("prompt");
+  const [facingMode, setFacingMode] = useState("environment");
 
   const maxSizeInMb = 5;
   const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
@@ -155,6 +158,11 @@ export function Camera() {
       .then((result) => console.log(result));
   };
 
+  const toggleCamera = () => {
+    console.log("toggle", facingMode);
+    setFacingMode((prev) => (prev === "user" ? "environment" : "user"));
+  };
+
   return (
     <>
       <div className={styles["webcam-container"]}>
@@ -169,13 +177,21 @@ export function Camera() {
           </div>
         )}
         {!image && cameraPermission === "granted" && (
-          <Webcam
-            audio={false}
-            ref={webcamRef}
-            screenshotFormat="image/jpeg"
-            className={styles.webcam}
-            disablePictureInPicture={true}
-          />
+          <>
+            <Webcam
+              audio={false}
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              videoConstraints={{ facingMode }}
+              className={styles.webcam}
+              disablePictureInPicture={true}
+            />
+
+            <MdOutlineCameraswitch
+              className={styles["camera-switch"]}
+              onClick={() => toggleCamera()}
+            />
+          </>
         )}
         {image && (
           <>
