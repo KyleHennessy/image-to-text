@@ -100,7 +100,7 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
             status: 500,
             headers: headers,
             jsonBody:{
-               error: 'No text found in image. Try a different image'
+               error: 'No text found in image.'
             }
         }
     }
