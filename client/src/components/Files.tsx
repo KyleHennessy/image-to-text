@@ -5,7 +5,9 @@ import { FileItem } from "./FileItem";
 import styles from "./files.module.css";
 
 export function Files() {
-  const files = useFiles().files;
+  const files = [...useFiles().files];
+
+  files.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return (
     <div className="offcanvas offcanvas-start" id="files">
