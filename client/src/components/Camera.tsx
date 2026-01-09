@@ -1,6 +1,6 @@
 import Webcam from "react-webcam";
 import styles from "./camera.module.css";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MdOutlineCameraAlt } from "react-icons/md";
 import { MdTextSnippet } from "react-icons/md";
 import { MdUpload } from "react-icons/md";
@@ -19,9 +19,28 @@ export function Camera() {
   const [uploading, setUploading] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
   const [isNewFile, setIsNewFile] = useState(false);
+  const [cameraPermission, setCameraPermission] = useState("denied");
 
   const maxSizeInMb = 5;
   const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
+
+  useEffect(() => {
+    navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
+      setCameraPermission(permissionStatus.state);
+
+      const handleChange = () => {
+        setCameraPermission(permissionStatus.state);
+      };
+
+      //change the status when permission changes
+      permissionStatus.addEventListener("change", handleChange);
+
+      //cleanup
+      return () => {
+        permissionStatus.removeEventListener("change", handleChange);
+      };
+    });
+  }, []);
 
   const onCapture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -32,7 +51,7 @@ export function Camera() {
     const file = event?.target?.files?.[0];
     if (!file) return;
 
-    if(file.size > maxSizeInBytes){
+    if (file.size > maxSizeInBytes) {
       toast.error(`Max file size is ${maxSizeInMb}`);
       return;
     }
@@ -115,17 +134,25 @@ export function Camera() {
     setTimeout(() => {
       setIsPulsing(false);
     }, 5000);
-  }
+  };
 
   const onClickFiles = () => {
     setIsNewFile(false);
     setIsPulsing(false);
-  }
+    navigator.permissions
+      .query({ name: "camera" })
+      .then((result) => console.log(result));
+  };
 
   return (
     <>
       <div className={styles["webcam-container"]}>
-        {!image ? (
+        {!image && cameraPermission === "denied" && (
+          <div className="centered">
+            <p>Please enable your camera in browser settings.</p>
+          </div>
+        )}
+        {!image && cameraPermission === "granted" && (
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -133,7 +160,8 @@ export function Camera() {
             className={styles.webcam}
             disablePictureInPicture={true}
           />
-        ) : (
+        )}
+        {image && (
           <>
             <div className={styles.actions}>
               {uploading && <CgSpinner className={styles.spinner} />}
@@ -167,7 +195,7 @@ export function Camera() {
         >
           <button
             type="button"
-            className={`${styles.button} ${(isPulsing) ? styles.pulse : ''}`}
+            className={`${styles.button} ${isPulsing ? styles.pulse : ""}`}
             onAnimationEnd={() => setIsPulsing(false)}
             onClick={() => onClickFiles()}
             data-bs-toggle="offcanvas"
@@ -175,13 +203,12 @@ export function Camera() {
             aria-controls="files"
           >
             <MdTextSnippet />
-            {isNewFile && (
-              <span className={styles.badge} />
-            )}
+            {isNewFile && <span className={styles.badge} />}
           </button>
           <button
             type="button"
             className={`${styles["camera-button"]} ${styles["rounded-button"]}`}
+            hidden={cameraPermission === 'denied'}
             onClick={() => onCapture()}
           >
             <MdOutlineCameraAlt />
