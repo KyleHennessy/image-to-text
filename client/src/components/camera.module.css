@@ -19,7 +19,24 @@ video{
   width: 80px;
   height: 80px;
   font-size: 36pt;
+  position: relative;
   padding: 0;
+}
+
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: red;
+  color: white;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .rounded-button {
@@ -97,5 +114,21 @@ video{
 @media (min-width: 768px) {
   .webcam, .image {
     object-fit: contain; /* keep full feed visible */
+  }
+}
+
+.pulse {
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
   }
 }

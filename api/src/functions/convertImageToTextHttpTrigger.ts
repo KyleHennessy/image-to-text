@@ -7,6 +7,8 @@ const { ImageAnalysisClient } = require('@azure-rest/ai-vision-image-analysis');
 const createClient = require('@azure-rest/ai-vision-image-analysis').default;
 const { AzureKeyCredential } = require('@azure/core-auth');
 
+const maxSizeInMb = 5;
+const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
 
 export async function convertImageToTextHttpTrigger(request: HttpRequest, context: InvocationContext): Promise<HttpResponseInit> {
     const key = process.env["VISION_KEY"];
@@ -38,6 +40,16 @@ export async function convertImageToTextHttpTrigger(request: HttpRequest, contex
             headers: headers,
             jsonBody: {
                 error: "Missing image."
+            }
+        }
+    }
+
+    if(buffer.byteLength > maxSizeInBytes){
+        context.error("File too large");
+        return {
+            status: 400,
+            jsonBody: {
+                error: "File too large."
             }
         }
     }

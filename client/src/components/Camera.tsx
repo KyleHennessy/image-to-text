@@ -17,6 +17,11 @@ export function Camera() {
 
   const [image, setImage] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [isPulsing, setIsPulsing] = useState(false);
+  const [isNewFile, setIsNewFile] = useState(false);
+
+  const maxSizeInMb = 5;
+  const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
 
   const onCapture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -26,6 +31,11 @@ export function Camera() {
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event?.target?.files?.[0];
     if (!file) return;
+
+    if(file.size > maxSizeInBytes){
+      toast.error(`Max file size is ${maxSizeInMb}`);
+      return;
+    }
 
     const reader = new FileReader();
 
@@ -93,8 +103,23 @@ export function Camera() {
     }
 
     setFiles(updatedFiles);
+    triggerNewFileAnimation();
 
-    toast.success("Image converted to text! Open the files screen to view")
+    toast.success("Image converted to text");
+  }
+
+  const triggerNewFileAnimation = () => {
+    setIsNewFile(true);
+    setIsPulsing(true);
+
+    setTimeout(() => {
+      setIsPulsing(false);
+    }, 5000);
+  }
+
+  const onClickFiles = () => {
+    setIsNewFile(false);
+    setIsPulsing(false);
   }
 
   return (
@@ -142,12 +167,17 @@ export function Camera() {
         >
           <button
             type="button"
-            className={styles.button}
+            className={`${styles.button} ${(isPulsing) ? styles.pulse : ''}`}
+            onAnimationEnd={() => setIsPulsing(false)}
+            onClick={() => onClickFiles()}
             data-bs-toggle="offcanvas"
             data-bs-target="#files"
             aria-controls="files"
           >
             <MdTextSnippet />
+            {isNewFile && (
+              <span className={styles.badge} />
+            )}
           </button>
           <button
             type="button"
