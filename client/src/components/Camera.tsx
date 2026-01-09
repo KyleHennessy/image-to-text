@@ -25,6 +25,7 @@ export function Camera() {
   const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
 
   useEffect(() => {
+    navigator.mediaDevices.getUserMedia({ video: true });
     navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
       setCameraPermission(permissionStatus.state);
 
