@@ -154,7 +154,7 @@ export function Camera() {
             <p>Please enable your camera in browser settings.</p>
           </div>
         )}
-        {!image && cameraPermission === "granted" && (
+        {!image && (cameraPermission === "granted" || cameraPermission === "prompt") && (
           <Webcam
             audio={false}
             ref={webcamRef}
