@@ -19,13 +19,12 @@ export function Camera() {
   const [uploading, setUploading] = useState(false);
   const [isPulsing, setIsPulsing] = useState(false);
   const [isNewFile, setIsNewFile] = useState(false);
-  const [cameraPermission, setCameraPermission] = useState("denied");
+  const [cameraPermission, setCameraPermission] = useState<PermissionState>("prompt");
 
   const maxSizeInMb = 5;
   const maxSizeInBytes = maxSizeInMb * 1024 * 1024;
 
   useEffect(() => {
-    navigator.mediaDevices.getUserMedia({ video: true });
     navigator.permissions.query({ name: "camera" }).then((permissionStatus) => {
       setCameraPermission(permissionStatus.state);
 
@@ -42,6 +41,16 @@ export function Camera() {
       };
     });
   }, []);
+
+  //some devices will BLOCK the camera popup if it shows automatically. Need to use a button instead
+  const requestCamera = async () => {
+    try {
+      await navigator.mediaDevices.getUserMedia({ video: true });
+      setCameraPermission("granted");
+    } catch {
+      setCameraPermission("denied");
+    }
+  };
 
   const onCapture = useCallback(() => {
     const imageSrc = webcamRef.current?.getScreenshot();
@@ -107,7 +116,7 @@ export function Camera() {
           year: "numeric",
           hour: "numeric",
           minute: "2-digit",
-          second: '2-digit',
+          second: "2-digit",
           hour12: true,
         })
         .replace(",", ""),
@@ -149,12 +158,17 @@ export function Camera() {
   return (
     <>
       <div className={styles["webcam-container"]}>
+        {!image && cameraPermission === "prompt" && (
+          <div className="centered">
+            <button onClick={() => requestCamera()}>Enable Camera</button>
+          </div>
+        )}
         {!image && cameraPermission === "denied" && (
           <div className="centered">
             <p>Please enable your camera in browser settings.</p>
           </div>
         )}
-        {!image && (cameraPermission === "granted" || cameraPermission === "prompt") && (
+        {!image && cameraPermission === "granted" && (
           <Webcam
             audio={false}
             ref={webcamRef}
@@ -210,7 +224,7 @@ export function Camera() {
           <button
             type="button"
             className={`${styles["camera-button"]} ${styles["rounded-button"]}`}
-            hidden={cameraPermission === 'denied'}
+            hidden={cameraPermission === "denied"}
             onClick={() => onCapture()}
           >
             <MdOutlineCameraAlt />
