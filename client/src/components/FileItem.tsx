@@ -20,7 +20,7 @@ export function FileItem({ textFile }: FileItemProps) {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = textFile.date;
+    a.download = `${textFile.date}.txt`;
     a.click();
 
     URL.revokeObjectURL(url);
